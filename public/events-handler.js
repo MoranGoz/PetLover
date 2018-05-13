@@ -11,18 +11,21 @@ class EventsHandler {
             if ($input.val() === "") {
                 alert("Please enter text!"); 
             } else {
-                this.postsRepository.addPost($input.val());
-                this.postsRenderer.renderPosts(this.postsRepository.posts);
+                this.postsRepository.addPost($input.val()).then(()=>{this.postsRenderer.renderPosts(this.postsRepository.posts)})
+                // this.postsRenderer.renderPosts(this.postsRepository.posts);
                 $input.val("");
             }
             });        
     }
 
-    registerRemovePost() {
+   async registerRemovePost() {
         this.$posts.on('click', '.remove-post', (event) => {
             let index = $(event.currentTarget).closest('.post').index();;
-            this.postsRepository.removePost(index);
-            this.postsRenderer.renderPosts(this.postsRepository.posts);
+            // i chenged the argument that wil sent for femove to be an id instad of index
+            let id = $(event.currentTarget).closest('.post').attr("data-id");
+            console.log(id);
+            this.postsRepository.removePost(id);
+            // this.postsRenderer.renderPosts(this.postsRepository.posts);
           });
 
     }

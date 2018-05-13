@@ -1,26 +1,94 @@
-    /**
-     * @class Responsible for storing and manipulating Spacebook posts, in-memory
-     */
+import api from './api.js';
+
+/**
+* @class Responsible for storing and manipulating Spacebook posts, in-memory
+*/
+
 class PostsRepository {
-    constructor() {
+    constructor(api) {
         this.posts = [];
+        this.api = api;
     }
 
-    addPost(postText) {
-        this.posts.push({ text: postText, comments: [] });
+    // async dataInit() {
+    //     try {
+    //     this.posts = await api.fetch()
+    //     }
+    //     catch (e) {
+    //         console.log('there was an error');
+    //         console.log(e);
+    //     }
+    // }
+
+    //my code
+    dataInit(){
+       return  api.fetch().then((data)=>{
+            this.posts = data;
+         });
     }
 
-    removePost(index) {
-        this.posts.splice(index, 1);
+    // addPost(postText) {
+    //     return  $.ajax({
+    //         method: "POST",
+    //         url: '/posts',
+    //         data: newPostText
+    //     }).then(()=>{
+    //         this.posts.push({ text: postText, comments: []})
+    //     });  
+    // }
+
+    async addPost(postText) {
+        try {
+            var newPostText = { text: postText };
+            let result = await $.ajax({
+                method: "POST",
+                url: '/posts',
+                data: newPostText
+            });
+            this.dataInit();
+            //his.posts.push(result);
+        }
+        catch (e) {
+            console.log('there was an error');
+            console.log(e);
+        }
     }
-    
-    addComment(newComment, postIndex) {
-        this.posts[postIndex].comments.push(newComment);
+
+    async removePost(id) {
+        console.log(id)
+            return $.ajax({
+                method: "DELETE",
+                url: '/posts/' + id ,
+            })
+           //  this.dataInit();
+        // catch (e) {
+        //     console.log('there was an error removing post');
+        //     console.log(e);
+        // }
+    }
+
+    async addComment(newComment, postIndex) {
+        try{
+        //var newCommentText = { text: newComment };
+        let result = await $.ajax({
+            method: "POST",
+            url: '/comment',
+            data: newComment
+        })
+        // this.posts[postIndex].comments.push(newComment);
+       this.dataInit();
+        }
+        catch (e) {
+            console.log('there was an error');
+            console.log(e);
+        }
+        
     };
 
     deleteComment(postIndex, commentIndex) {
-        this.posts[postIndex].comments.splice(commentIndex, 1);
-      };
+        this.dataInit();
+        //this.posts[postIndex].comments.splice(commentIndex, 1);
+    };
 }
 
 export default PostsRepository

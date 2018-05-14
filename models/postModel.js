@@ -18,6 +18,6 @@ let Post = mongoose.model('post', postSchema)
 let Comment = mongoose.model('comment', commentSchema)
 
 module.exports = {
-    Post : Post ,
+    Post : Post , 
     Comment : Comment
 }  ;

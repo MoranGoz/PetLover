@@ -46,7 +46,7 @@ class PostsRepository {
                 data: newPostText
             });
             this.dataInit();
-            //his.posts.push(result);
+            this.posts.push(result);
         }
         catch (e) {
             console.log('there was an error');
@@ -60,23 +60,20 @@ class PostsRepository {
                 method: "DELETE",
                 url: '/posts/' + id ,
             })
-           //  this.dataInit();
-        // catch (e) {
-        //     console.log('there was an error removing post');
-        //     console.log(e);
-        // }
+             this.dataInit();
+        
+       
     }
 
-    async addComment(newComment, postIndex) {
+    async addComment(newComment, postId) {
         try{
-        //var newCommentText = { text: newComment };
         let result = await $.ajax({
             method: "POST",
-            url: '/comment',
+            url: '/comment/'+  postId ,
             data: newComment
         })
-        // this.posts[postIndex].comments.push(newComment);
-       this.dataInit();
+         this.posts[postIndex].comments.push(newComment);
+         this.dataInit();
         }
         catch (e) {
             console.log('there was an error');

@@ -82,18 +82,41 @@ app.delete(`/posts/:id`, (req, res) => {
 
 
 // 4) to handle adding a comment to a post
-app.post('/comment', (req, res) => {
-  var newcomment = new postModel.Comment(req.body);
-  newcomment.save((err, post) => {
-      //after it saved return the saved post to the client, he'll get in the success function
+app.put(`/posts/:id`, (req, res) => {
+  var id = req.params.id;
+  var newcomment = (req.body);
+  Post.findOneAndUpdate({ _id: id }, { $push: { comments: newcomment } }, { new: true }, (err, doc) => {
       if (err) {
-          console.log(err);
-      } else {
-          console.log('Comment added')
-          res.send(comment);
+          console.log("Something wrong when updating data!");
       }
-  })
+      console.log(doc);
+  });
+})
+
+//try 
+app.post('/comment/:id', (req, res) => {
+  var postId = req.params.id;
+  console.log(postId)
+  var newcomment = new postModel.Comment(req.body);
+  var addTo =postModel.Post.findOne({_id : postId}).exec(function(err, addTo){
+    if (err){
+      console.log(err)
+    } else{
+      // console.log(posts);
+      addTo.comment.push(newcomment).save((err, post) => {
+        //after it saved return the saved post to the client, he'll get in the success function
+        if (err) {
+            console.log(err);
+        } else {
+            console.log('Comment added')
+            res.send(comment);
+        }
+      res.send(posts);
+      })
+  }
+  });
 });
+
 // 5) to handle deleting a comment from a post
 app.post('/deletComment', (req, res) => {
   postModel.comment.remove({ id: req.body }, function(err) {

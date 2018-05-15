@@ -60,9 +60,8 @@ class PostsRepository {
                 method: "DELETE",
                 url: '/posts/' + id ,
             })
-             this.dataInit();
-        
-       
+            this.dataInit();
+            this.posts.splice(index, 1);
     }
 
     async addComment(newComment, postId) {

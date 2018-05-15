@@ -97,16 +97,19 @@ app.put(`/posts/:id`, (req, res) => {
 app.post('/comment/:id', (req, res) => {
   var postId = req.params.id;
   console.log(postId)
-  var newcomment = new postModel.Comment(req.body);
-  var addTo =postModel.Post.findOne({_id : postId}).exec(function(err, addTo){
+  var newComment = new postModel.Comment(req.body);
+ postModel.Post.findOne({_id : postId}).exec(function(err, addTo){
     if (err){
       console.log(err)
     } else{
       // console.log(posts);
-      addTo.comment.push(newcomment).save((err, post) => {
+      newComment.save();
+      addTo.comments.push(newComment);
+      addTo.save((err, post) => {
         //after it saved return the saved post to the client, he'll get in the success function
         if (err) {
             console.log(err);
+            res.sendStatus(500).send("er")
         } else {
             console.log('Comment added')
             res.send(comment);
